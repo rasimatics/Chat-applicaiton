@@ -21,12 +21,12 @@ def chat():
 @socketio.on('join-room')
 def handle_join_room(data):
     join_room(data['room'])
-    socketio.emit('join-room-info',data)
+    socketio.emit('join-room-info', data, data['room'])
 
 
 @socketio.on('send-message')
 def handle_send_message(data):
-    socketio.emit('receive-message',data)
+    socketio.emit('receive-message', data, data['room'])
 
 
 
