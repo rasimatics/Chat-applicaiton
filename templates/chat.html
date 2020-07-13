@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  </head>
+  <body>
+    <h2>Welcome, {{ username }} to room-{{room}}</h2>
+
+    <div id="message"></div>
+
+    <form id="messsageForm">
+      <input type="text" id="messageInput" placeholder="Your message ..."/>
+      <button type="submit">Send</button>
+    </form>
+  </body>
+
+  <script>
+    const socket = io.connect("127.0.0.1:5000");
+
+    socket.on("connect", function () {
+      socket.emit("join-room", {
+        username: "{{username}}",
+        room: "{{room}}",
+      });
+
+      let messageForm = document.getElementById("messsageForm");
+
+      messageForm.onsubmit = function (e) {
+        let messageInput = document.getElementById('messageInput')
+        let message = messageInput.value
+        e.preventDefault();
+        if(message.length > 0)
+        {   
+            socket.emit('send-message',{
+                username:"{{username}}",
+                room: "{{room}}",
+                message:message
+            })
+            messageInput.value = ''
+        }
+      }
+    });
+
+    socket.on("join-room-info", function (data) {
+      document.getElementById("message").innerHTML += `<h5>${data.username} connected to this room</h5>`;
+    });
+
+    socket.on('receive-message',function(data){
+        document.getElementById('message').innerHTML += `<h4>${data.username}:${data.message}</h4>`
+    })
+  </script>
+</html>

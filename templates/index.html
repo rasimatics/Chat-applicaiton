@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat application</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  </head>
+  <body>
+    <form action="{{ url_for('chat') }}">
+      <label>Username</label>
+      <input type="text" required name="username" />
+      <label>Room id</label>
+      <input type="text" required name="room" />
+      <input type="submit" value="Connect" />
+    </form>
+  </body>
+</html>
