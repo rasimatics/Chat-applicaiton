@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>Chat application</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   </head>
   <body>
 
@@ -14,9 +13,14 @@
       {%endif%}
     {%endwith%}
 
+    {%if current_user.is_authenticated%}
+      <p>Authenticated</p>
+    {%endif%}
     <form action="{{ url_for('chat') }}">
-      <label>Room id</label>
-      <input type="text" required name="room" />
+      <label>Room Name</label>
+      <input type="text" required name="name" />
+      <label>Number of members</label>
+      <input type="number" required name="number" />
       <input type="submit" value="Connect" />
     </form>
     <a href="{{url_for('logout')}}">Logout</a>

@@ -67,8 +67,10 @@ def logout():
 
 @app.route('/chat')
 def chat():
-    room = request.args.get('room')
-    if room:
+    room = request.args.get('name')
+    members = request.args.get('number')
+    if room and members:
+        create_room(current_user.username,room,members)
         return render_template('chat.html',room=room)
     return redirect(url_for('home'))
 

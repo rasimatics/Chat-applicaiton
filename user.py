@@ -20,7 +20,7 @@ class User:
         return False
 
     def get_id(self):
-        self.username
+        return self.username
 
     def check_password(self,password):
         return check_password_hash(self.password,password)
