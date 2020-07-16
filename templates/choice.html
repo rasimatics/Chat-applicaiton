@@ -14,7 +14,7 @@
     {%endwith%}
 
     {%if current_user.is_authenticated%}
-      <p>Authenticated</p>
+      <p>Hello {{current_user.username}}</p>
     {%endif%}
     <a href="{{url_for('create')}}">Create Room</a>
     <a href="{{url_for('join')}}">Join Room</a>

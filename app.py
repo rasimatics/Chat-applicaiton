@@ -19,7 +19,6 @@ def load_user(username):
     return get_user(username)
 
 
-
 @app.route('/')
 @login_required
 def home():
@@ -115,6 +114,11 @@ def handle_send_message(data):
     data['username'] = current_user.username
     save_message(data['message'],data['username'],data['room'])
     socketio.emit('receive-message', data, data['room'])
+
+@socketio.on('load-messages')
+def handle_last_messages(data):
+    data['messages'] = get_messages(data['room'])
+    socketio.emit('load-messages-info',data,data['room'])
 
 
 

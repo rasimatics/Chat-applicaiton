@@ -13,14 +13,13 @@
       {%endif%}
     {%endwith%}
 
-    {%if current_user.is_authenticated%}
-      <p>Authenticated</p>
-    {%endif%}
     <form method="POST" action="{{ url_for('join') }}">
       <label>Room Name</label>
       <input type="text" required name="name" />
       <input type="submit" value="Join" />
     </form>
+    <a href="{{url_for('home')}}">Go back</a>
+    <br>
     <a href="{{url_for('logout')}}">Logout</a>
   </body>
 </html>
