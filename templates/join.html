@@ -16,12 +16,10 @@
     {%if current_user.is_authenticated%}
       <p>Authenticated</p>
     {%endif%}
-    <form action="{{ url_for('chat') }}">
+    <form method="POST" action="{{ url_for('join') }}">
       <label>Room Name</label>
       <input type="text" required name="name" />
-      <label>Number of members</label>
-      <input type="number" required name="number" />
-      <input type="submit" value="Connect" />
+      <input type="submit" value="Join" />
     </form>
     <a href="{{url_for('logout')}}">Logout</a>
   </body>

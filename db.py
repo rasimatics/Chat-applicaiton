@@ -33,5 +33,9 @@ def create_room(username,room_name,num_member):
 def add_member(username,room_name):
     room = room_collection.find_one({'_id':room_name})
     member_collection.insert_one({'room_name': room_name,'username':username,'added_at': datetime.now()})
+    room_collection.find_one_and_update({'_id':room_name},{'$inc':{'n_members':-1}})
 
-# room = room_collection.find_one_and_update({'_id':"adgadg"},{'$inc':{'n_members':-1}})
+
+def get_num_of_members(room_name):
+    room = room_collection.find_one({'_id':room_name})
+    return room['n_members']    

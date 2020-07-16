@@ -23,7 +23,8 @@ def load_user(username):
 @app.route('/')
 @login_required
 def home():
-    return render_template('index.html')
+    return render_template('choice.html')
+
 
 @app.route('/login',methods=['GET','POST'])
 def login():
@@ -64,25 +65,46 @@ def logout():
     return redirect(url_for('login'))
 
     
+# create room
+@app.route('/create',methods=['GET','POST'])
+def create():
+    if request.method == 'POST':
+        room = request.form['name']
+        members = request.form['number']
+        if room and members:
+            create_room(current_user.username,room,members) 
+            return redirect(url_for('chat',room=room))
+        return redirect(url_for('home'))
+    return render_template('create.html')
 
-@app.route('/chat')
-def chat():
-    room = request.args.get('name')
-    members = request.args.get('number')
-    if room and members:
-        create_room(current_user.username,room,members)
-        return render_template('chat.html',room=room)
-    return redirect(url_for('home'))
+# join room
+@app.route('/join',methods=['GET','POST'])
+def join():
+    if request.method == 'POST':
+        room = request.form['name']
+        if get_num_of_members(room) > 0:
+            add_member(current_user.username,room)
+            return redirect(url_for('chat',room=room))
+        flash("Room is full")
+        return render_template('choice.html')
+    return render_template('join.html')
+
+@app.route('/chat/<room>')
+def chat(room):
+    return render_template('chat.html',room=room)
+
 
 
 @socketio.on('join-room')
 def handle_join_room(data):
     join_room(data['room'])
+    data['username'] = current_user.username
     socketio.emit('join-room-info', data, data['room'])
 
 
 @socketio.on('send-message')
 def handle_send_message(data):
+    data['username'] = current_user.username
     socketio.emit('receive-message', data, data['room'])
 
 
