@@ -82,7 +82,12 @@ def create():
 def join():
     if request.method == 'POST':
         room = request.form['name']
-        if get_num_of_members(room) > 0:
+        # member of chat
+        if check_is_member(current_user.username,room):
+            return render_template('chat.html',room=room)
+        
+        # not member of chat
+        elif get_num_of_members(room) > 0:
             add_member(current_user.username,room)
             return redirect(url_for('chat',room=room))
         flash("Room is full")
@@ -91,7 +96,10 @@ def join():
 
 @app.route('/chat/<room>')
 def chat(room):
-    return render_template('chat.html',room=room)
+    if check_is_member(current_user.username,room):
+        return render_template('chat.html',room=room)
+    flash('Room is full')
+    return redirect(url_for('home'))
 
 
 
@@ -105,6 +113,7 @@ def handle_join_room(data):
 @socketio.on('send-message')
 def handle_send_message(data):
     data['username'] = current_user.username
+    save_message(data['message'],data['username'],data['room'])
     socketio.emit('receive-message', data, data['room'])
 
 

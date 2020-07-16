@@ -15,6 +15,7 @@ chat_db = client.get_database('ChatApp')
 user_collection = chat_db.get_collection('users')
 room_collection = chat_db.get_collection('rooms')
 member_collection = chat_db.get_collection('members')
+messages_collection = chat_db.get_collection('messages')
 
 def save_user(username,email,password):
     password = generate_password_hash(password)
@@ -39,3 +40,11 @@ def add_member(username,room_name):
 def get_num_of_members(room_name):
     room = room_collection.find_one({'_id':room_name})
     return room['n_members']    
+
+def check_is_member(username,room_name):
+   return member_collection.find_one({'room_name':room_name,'username':username})
+
+
+def save_message(message,username,room_name):
+    messages_collection.insert_one({'message':message,'username':username,'room_name':room_name})
+
