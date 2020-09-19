@@ -209,12 +209,16 @@
       rel="stylesheet"
     />
     <div class="container">
-      <div class="col-md-12 col-lg-6">
+      <div class="justify-content-center">
         <div class="panel">
           <!--Heading-->
           <div class="panel-heading">
             <h3 class="panel-title">Chat Room: {{room}}</h3>
           </div>
+          
+          <button type="submit" id="loadmessages" class="btn btn-primary btn-block" type="button">
+            Load Messages
+          </button>
 
           <!--Widget body-->
           <div id="demo-chat-body" class="collapse in">
@@ -262,6 +266,7 @@
         </div>
       </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script>
       const socket = io.connect("127.0.0.1:5000");
@@ -279,22 +284,19 @@
         e.preventDefault();
         let messageInput = document.getElementById("messageInput");
         let message = messageInput.value;
-        let date = new Date();
-        let time = date.toLocaleTimeString().replace(/:\d+ /, ' ')
         if (message.length > 0) {
           socket.emit("send-message", {
             username: "{{username}}",
             room: "{{room}}",
             message: message,
-            time:time,
           });
           messageInput.value = "";
         }
       };
 
-      //   document.getElementById("loadmessages").onclick = function () {
-      //     socket.emit("load-messages", { room: "{{room}}" });
-      //   };
+      document.getElementById("loadmessages").onclick = function () {
+        socket.emit("load-messages", { room: "{{room}}" });
+        };
 
       socket.on("join-room-info", function (data) {
         document.getElementById(
@@ -311,8 +313,6 @@
     								<div class="speech">
     									<a href="#" class="media-heading">${data.username}</a>
                                         <p>${data.message}</p>
-    									<p class="speech-time">
-    									<i class="fa fa-clock-o fa-fw"></i>${data.time}
     									</p>
     								</div>
     							</div>
@@ -326,8 +326,6 @@
     								<div class="speech">
     									<a href="#" class="media-heading">${data.username}</a>
                                         <p>${data.message}</p>
-    									<p class="speech-time">
-    									<i class="fa fa-clock-o fa-fw"></i>${data.time}
     									</p>
     								</div>
     							</div>
@@ -339,16 +337,44 @@
           document.getElementById("message").innerHTML += message1;
         }
 
-        let msgDiv = document.getElementsByClassName('nano-content')[0];
+        let msgDiv = document.getElementsByClassName("nano-content")[0];
         msgDiv.scrollTop = msgDiv.scrollHeight;
-
       });
 
       socket.on("load-messages-info", function (data) {
+        document.getElementById("message").innerHTML = ""
         data.messages.map((message) => {
-          document.getElementById(
-            "message"
-          ).innerHTML += `<h4>${message.username}:${message.message}</h4>`;
+            if(message.username == '{{current_user.username}}'){
+                document.getElementById("message").innerHTML += 
+                            `<li class="mar-btm">
+    							<div class="media-right">
+    								<img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="img-circle img-sm" alt="Profile Picture">
+    							</div>
+    							<div class="media-body pad-hor speech-right">
+    								<div class="speech">
+    									<a href="#" class="media-heading">${message.username}</a>
+                                        <p>${message.message}</p>
+    									</p>
+    								</div>
+    							</div>
+                            </li>`;
+            }
+            else{
+                document.getElementById("message").innerHTML +=  
+                            `<li class="mar-btm">
+    							<div class="media-left">
+    								<img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-circle img-sm" alt="Profile Picture">
+    							</div>
+    							<div class="media-body pad-hor">
+    								<div class="speech">
+    									<a href="#" class="media-heading">${message.username}</a>
+                                        <p>${message.message}</p>
+    									</p>
+    								</div>
+    							</div>
+                            </li>`;
+            }
+         
           document.getElementById("loadmessages").style.display = "none";
         });
       });
