@@ -1,27 +1,45 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Chat application</title>
-  </head>
-  <body>
+{%extends 'base.html'%}
+{%block content%}
+<form class="form-signin" method="POST"  action="{{ url_for('create') }}">
+  <h1 class="h3 mb-3 font-weight-normal">Create Room</h1>
+  {%with messages = get_flashed_messages()%}
+  {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-danger" role="alert">
+      {{message}}
+    </div>
+    {%endfor%}
+  {%endif%}
+  {%endwith%}
+  <label for="name" class="sr-only">Room Name</label>
+  <input
+    type="text"
+    id="name"
+    name="name"
+    class="form-control"
+    placeholder="Room name"
+    required
+    autofocus
+  />
+  <label for="number" class="sr-only">Number</label>
+  <input
+    type="number"
+    id="inputPassword"
+    name="number"
+    class="form-control"
+    placeholder="Number of people"
+    required
+  />
+  <div class="checkbox mb-3">
+    <label style="display: flex;justify-content: space-between;">
+      <a href="{{url_for('home')}}">Go back</a>
+      <a href="{{url_for('logout')}}">Logout</a>
+    </label>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">
+    Create
+  </button>
+</form>
+{%endblock%}
 
-    {%with messages = get_flashed_messages()%}
-      {%if messages%}
-        {%for message in messages%}
-          <strong><p>{{message}}</p></strong>
-        {%endfor%}
-      {%endif%}
-    {%endwith%}
 
-    <form method="POST"  action="{{ url_for('create') }}">
-      <label>Room Name</label>
-      <input type="text" required name="name" />
-      <label>Number of members</label>
-      <input type="number" required min="1" name="number" />
-      <input type="submit" value="Connect" />
-    </form>
-    <a href="{{url_for('home')}}">Go back</a>
-    <br>
-    <a href="{{url_for('logout')}}">Logout</a>
-  </body>
-</html>

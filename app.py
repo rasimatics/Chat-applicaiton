@@ -71,8 +71,13 @@ def create():
         room = request.form['name']
         members = request.form['number']
         if room and members:
-            create_room(current_user.username,room,members) 
-            return redirect(url_for('chat',room=room))
+            exist = room_collection.find_one({'_id':room})
+            if exist:
+                flash("This room name was taken!")
+                return redirect(url_for('create'))
+            else:
+                create_room(current_user.username,room,members) 
+                return redirect(url_for('chat',room=room))
         return redirect(url_for('home'))
     return render_template('create.html')
 

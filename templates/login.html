@@ -1,24 +1,43 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Login</title>
-  </head>
-  <body>
-    {%with messages = get_flashed_messages()%}
-      {%if messages%}
-        {%for message in messages%}
-          <strong><p>{{message}}</p></strong>
-        {%endfor%}
-      {%endif%}
-    {%endwith%}
-    <form method="POST" action="{{ url_for('login') }}">
-      <label>Username</label>
-      <input type="text" required name="username" />
-      <label>Password</label>
-      <input type="password" required name="password" />
-      <input type="submit" value="Log in" />
-    </form>
-    <p>Don't have an account?</p>
-    <a href="{{'signup'}}">Signup</a>
-  </body>
-</html>
+{%extends 'base.html'%}
+{%block content%}
+<form class="form-signin" method="POST" action="{{ url_for('login') }}">
+  <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+  {%with messages = get_flashed_messages()%}
+  {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-danger" role="alert">
+      {{message}}
+    </div>
+    {%endfor%}
+  {%endif%}
+  {%endwith%}
+  <label for="inputEmail" class="sr-only">Username</label>
+  <input
+    type="text"
+    id="inputEmail"
+    name="username"
+    class="form-control"
+    placeholder="Username"
+    required
+    autofocus
+  />
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input
+    type="password"
+    id="inputPassword"
+    name="password"
+    class="form-control"
+    placeholder="Password"
+    required
+  />
+  <div class="checkbox mb-3">
+    <label>
+      <p>Don't have an account?</p>
+      <a href="{{'signup'}}">Sign up</a>
+    </label>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">
+    Sign in
+  </button>
+</form>
+{%endblock%}
