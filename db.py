@@ -46,7 +46,7 @@ def check_is_member(username,room_name):
 
 
 def save_message(message,username,room_name):
-    messages_collection.insert_one({'message':message,'username':username,'room_name':room_name})
+    messages_collection.insert_one({'message':message,'username':username,'room_name':room_name,'created_at': datetime.now()})
 
 def get_messages(room_name):
     return list(messages_collection.find({"room_name":room_name},{"_id":0}))
