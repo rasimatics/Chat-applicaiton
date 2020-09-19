@@ -86,16 +86,22 @@ def create():
 def join():
     if request.method == 'POST':
         room = request.form['name']
-        # member of chat
-        if check_is_member(current_user.username,room):
-            return render_template('chat.html',room=room)
-        
-        # not member of chat
-        elif get_num_of_members(room) > 0:
-            add_member(current_user.username,room)
-            return redirect(url_for('chat',room=room))
-        flash("Room is full")
-        return render_template('choice.html')
+        exist = room_collection.find_one({'_id':room})
+
+        if exist:
+            # member of chat
+            if check_is_member(current_user.username,room):
+                return render_template('chat.html',room=room)
+            
+            # not member of chat
+            elif get_num_of_members(room) > 0:
+                add_member(current_user.username,room)
+                return redirect(url_for('chat',room=room))
+            flash("Room is full")
+            return render_template('choice.html')
+        else:
+            flash("There is no room with this name")
+            return redirect(url_for('join'))
     return render_template('join.html')
 
 @app.route('/chat/<room>')
